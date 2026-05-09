@@ -1,0 +1,50 @@
+[
+  {
+    "label": "Manual Reviewer: Add for selection",
+    "command": "mreview",
+    "args": ["add", "--from-zed-task"],
+    "env": {
+      "MREVIEW_ZED_TEXT": "${ZED_SELECTED_TEXT:}",
+      "MREVIEW_ZED_FILE": "${ZED_FILE:}",
+      "MREVIEW_ZED_ROW": "${ZED_ROW:}",
+      "MREVIEW_ZED_COLUMN": "${ZED_COLUMN:}",
+      "MREVIEW_ZED_LANGUAGE": "${ZED_LANGUAGE:}",
+      "MREVIEW_ZED_WORKTREE_ROOT": "${ZED_WORKTREE_ROOT}"
+    },
+    "use_new_terminal": false,
+    "reveal": "always",
+    "allow_concurrent_runs": false,
+    "hide": "on_success"
+  },
+  {
+    "label": "Manual Reviewer: Export prompt",
+    "command": "mreview",
+    "args": ["export"],
+    "env": {
+      "MREVIEW_ZED_WORKTREE_ROOT": "${ZED_WORKTREE_ROOT}"
+    },
+    "use_new_terminal": false,
+    "reveal": "always",
+    "hide": "on_success"
+  },
+  {
+    "label": "Manual Reviewer: List",
+    "command": "mreview",
+    "args": ["list"],
+    "env": {
+      "MREVIEW_ZED_WORKTREE_ROOT": "${ZED_WORKTREE_ROOT}"
+    },
+    "use_new_terminal": false,
+    "reveal": "always"
+  },
+  {
+    "label": "Manual Reviewer: Clear (archive)",
+    "command": "mreview",
+    "args": ["clear", "--archive"],
+    "env": {
+      "MREVIEW_ZED_WORKTREE_ROOT": "${ZED_WORKTREE_ROOT}"
+    },
+    "use_new_terminal": false,
+    "reveal": "always"
+  }
+]

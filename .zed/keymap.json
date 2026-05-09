@@ -1,0 +1,19 @@
+// NOTE: Zed only loads keybindings from the GLOBAL keymap
+// (~/.config/zed/keymap.json on macOS/Linux, ~/AppData/Roaming/Zed/keymap.json
+// on Windows). Project-level .zed/keymap.json is *not* loaded.
+//
+// `mreview config-zed` merges these bindings into your global keymap for you.
+//
+// Symbol-key gotcha: Zed wants the post-shift character, so `cmd-shift-'` is
+// written as `cmd-"` and `cmd-shift-i` as `cmd-I`.
+[
+  {
+    "context": "Editor && !VimWaiting",
+    "bindings": {
+      "cmd-\"":  ["task::Spawn", { "task_name": "Manual Reviewer: Add for selection" }],
+      "ctrl-\"": ["task::Spawn", { "task_name": "Manual Reviewer: Add for selection" }],
+      "cmd-I":   ["task::Spawn", { "task_name": "Manual Reviewer: Export prompt" }],
+      "ctrl-I":  ["task::Spawn", { "task_name": "Manual Reviewer: Export prompt" }]
+    }
+  }
+]
