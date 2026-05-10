@@ -8,7 +8,7 @@ use clap::{Args, Parser, Subcommand};
     long_about = None,
 )]
 pub struct Cli {
-    /// Override the workspace root. Defaults to $MREVIEW_ZED_WORKTREE_ROOT,
+    /// Override the workspace root. Defaults to $MREVIEW_WORKTREE_ROOT,
     /// then the nearest ancestor `.git`, then the current directory.
     #[arg(long, global = true, env = "MREVIEW_WORKSPACE_ROOT")]
     pub workspace: Option<String>,
@@ -43,14 +43,14 @@ pub struct ConfigZedArgs {
 
 #[derive(Debug, Args)]
 pub struct AddArgs {
-    /// `file:startLine:startCol-endLine:endCol`. Required unless --from-zed-task.
+    /// `file:startLine:startCol-endLine:endCol`. Required unless --from-env.
     #[arg(value_name = "LOCATION")]
     pub location: Option<String>,
 
-    /// Read selection + position from $MREVIEW_ZED_* environment variables
+    /// Read selection + position from $MREVIEW_* environment variables
     /// (set by the Zed task in `.zed/tasks.json`).
     #[arg(long, conflicts_with = "location")]
-    pub from_zed_task: bool,
+    pub from_env: bool,
 
     /// One-line comment. If omitted, you'll be prompted in the terminal
     /// (multi-line; finish with empty line or Ctrl-D).
@@ -96,6 +96,12 @@ pub struct ExportArgs {
     /// Skip opening with `open` / `xdg-open` (default: open).
     #[arg(long)]
     pub no_open: bool,
+
+    /// Override the opener. Takes precedence over `$EDITOR` and the built-in
+    /// fallback list (`zed`, `code`, `cursor`, `subl`, `xdg-open`, `open`).
+    /// Supports an argument list: `--editor "code --wait"`.
+    #[arg(long, value_name = "CMD")]
+    pub editor: Option<String>,
 
     /// Skip writing to disk (stdout-only). Useful when piping.
     #[arg(long)]

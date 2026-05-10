@@ -26,13 +26,13 @@ fn main() -> Result<()> {
 
     match args.command {
         Command::Add(a) => {
-            if a.from_zed_task {
+            if a.from_env {
                 add_zed::run(&workspace, a.message)
             } else if let Some(loc) = a.location {
                 add_manual::run(&workspace, &loc, a.message)
             } else {
                 Err(anyhow::anyhow!(
-                    "missing LOCATION (or use --from-zed-task)"
+                    "missing LOCATION (or use --from-env)"
                 ))
             }
         }

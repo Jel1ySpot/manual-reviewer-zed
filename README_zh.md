@@ -52,16 +52,16 @@ Write your comment:
 ## CLI 命令
 
 ```
-mreview add --from-zed-task                         # Zed task 用的入口
+mreview add --from-env                         # Zed task 用的入口
 mreview add path/to/file:8:1-12:23 -m "your note"   # 手动入口；省略 -m 时弹编辑器
 mreview list [--json]
 mreview remove <SPEC>                               # SPEC: id | 1 | 1,3,5 | 2-4 | 1,3-5,8
 mreview clear [--archive]
-mreview export [--out PATH] [--format markdown|json] [--no-copy] [--no-open] [--no-write]
+mreview export [--out PATH] [--format markdown|json] [--editor CMD] [--no-copy] [--no-open] [--no-write]
 mreview config-zed [--dry-run]                      # 把 tasks/keymap 合并到 ~/.config/zed
 ```
 
-默认读取 `$MREVIEW_ZED_WORKTREE_ROOT` 作为工作区目录，使用 `--workspace <PATH>`（或环境变量 `MREVIEW_WORKSPACE_ROOT`）覆盖工作区变量，变量不存在则会从 `$PWD` 向上查找 `.git` 目录。
+默认读取 `$MREVIEW_WORKTREE_ROOT` 作为工作区目录，使用 `--workspace <PATH>`（或环境变量 `MREVIEW_WORKSPACE_ROOT`）覆盖工作区变量，变量不存在则会从 `$PWD` 向上查找 `.git` 目录。
 
 ## 开发
 

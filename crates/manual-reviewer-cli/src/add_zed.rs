@@ -8,12 +8,12 @@ use manual_reviewer_core::{git, Store};
 
 use crate::term_input::{print_selection_preview, read_multiline_comment};
 
-const ENV_TEXT: &str = "MREVIEW_ZED_TEXT";
-const ENV_FILE: &str = "MREVIEW_ZED_FILE";
-const ENV_ROW: &str = "MREVIEW_ZED_ROW";
-const ENV_COLUMN: &str = "MREVIEW_ZED_COLUMN";
-const ENV_LANGUAGE: &str = "MREVIEW_ZED_LANGUAGE";
-// MREVIEW_ZED_WORKTREE_ROOT is read in workspace::resolve, not here.
+const ENV_TEXT: &str = "MREVIEW_TEXT";
+const ENV_FILE: &str = "MREVIEW_FILE";
+const ENV_ROW: &str = "MREVIEW_ROW";
+const ENV_COLUMN: &str = "MREVIEW_COLUMN";
+const ENV_LANGUAGE: &str = "MREVIEW_LANGUAGE";
+// MREVIEW_WORKTREE_ROOT is read in workspace::resolve, not here.
 
 #[derive(Debug)]
 enum Mode {

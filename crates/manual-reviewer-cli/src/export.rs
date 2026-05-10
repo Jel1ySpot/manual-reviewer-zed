@@ -48,17 +48,15 @@ pub fn run(workspace: &Path, args: &ExportArgs) -> Result<()> {
     };
 
     if let Some(parent) = out_path.parent() {
-        fs::create_dir_all(parent).with_context(|| {
-            format!("create parent dir {}", parent.display())
-        })?;
+        fs::create_dir_all(parent)
+            .with_context(|| format!("create parent dir {}", parent.display()))?;
     }
 
     // Archive previous file if exists.
     if out_path.exists() {
         let _ = store.archive_prompt_file(&out_path);
     }
-    fs::write(&out_path, &body)
-        .with_context(|| format!("write {}", out_path.display()))?;
+    fs::write(&out_path, &body).with_context(|| format!("write {}", out_path.display()))?;
 
     let do_copy = !args.no_copy;
     let do_open = !args.no_open;
@@ -67,14 +65,22 @@ pub fn run(workspace: &Path, args: &ExportArgs) -> Result<()> {
             eprintln!("warning: clipboard copy failed: {}", e);
         }
     }
-    let opened_with = if do_open { open_path(&out_path) } else { None };
+    let opened_with = if do_open {
+        open_path(&out_path, args.editor.as_deref())
+    } else {
+        None
+    };
 
     println!(
         "Exported {} entr{} → {}{}{}",
         store.count(),
         if store.count() == 1 { "y" } else { "ies" },
         rel_for_print(workspace, &out_path),
-        if do_copy { " · copied to clipboard" } else { "" },
+        if do_copy {
+            " · copied to clipboard"
+        } else {
+            ""
+        },
         match opened_with {
             Some(cmd) => format!(" · opened with {}", cmd),
             None => String::new(),
@@ -89,17 +95,53 @@ fn copy_to_clipboard(body: &str) -> Result<()> {
     Ok(())
 }
 
-/// Try a list of openers in order; return the first that successfully spawned,
-/// or `None` if every one of them is missing/unrunnable. Failure is silent —
-/// the export already succeeded; opening is best-effort.
-fn open_path(p: &Path) -> Option<&'static str> {
+/// Try the openers in priority order, returning the first that successfully
+/// spawned (or `None` if all failed). Order:
+/// 1. `--editor` flag (when supplied)
+/// 2. `$EDITOR` environment variable
+/// 3. Built-in fallback list: `zed`, `code`, `cursor`, `subl`, `xdg-open`, `open`
+///
+/// Failure is silent — the export already succeeded; opening is best-effort.
+fn open_path(p: &Path, override_editor: Option<&str>) -> Option<String> {
+    if let Some(spec) = override_editor {
+        if let Some(used) = try_spawn_string(spec, p) {
+            return Some(used);
+        }
+    }
+
+    if let Ok(spec) = std::env::var("EDITOR") {
+        if let Some(used) = try_spawn_string(spec.trim(), p) {
+            return Some(used);
+        }
+    }
+
     const OPENERS: &[&str] = &["zed", "code", "cursor", "subl", "xdg-open", "open"];
     for cmd in OPENERS {
         if Command::new(cmd).arg(p).spawn().is_ok() {
-            return Some(cmd);
+            return Some((*cmd).to_string());
         }
     }
     None
+}
+
+/// Parse `spec` as a command-line (whitespace-split), append `p`, spawn.
+/// Returns `Some(spec.to_string())` on success.
+fn try_spawn_string(spec: &str, p: &Path) -> Option<String> {
+    if spec.is_empty() {
+        return None;
+    }
+    let mut parts = spec.split_whitespace();
+    let prog = parts.next()?;
+    let mut cmd = Command::new(prog);
+    for a in parts {
+        cmd.arg(a);
+    }
+    cmd.arg(p);
+    if cmd.spawn().is_ok() {
+        Some(spec.to_string())
+    } else {
+        None
+    }
 }
 
 fn rel_for_print(workspace: &Path, target: &Path) -> String {

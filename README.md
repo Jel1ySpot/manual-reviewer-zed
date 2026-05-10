@@ -52,16 +52,16 @@ Write your comment. **Enter** submits, **Shift+Enter** (or **Ctrl-J**) inserts a
 ## CLI commands
 
 ```
-mreview add --from-zed-task                         # Zed task entry point
+mreview add --from-env                         # Zed task entry point
 mreview add path/to/file:8:1-12:23 -m "your note"   # manual; omit -m to open the editor
 mreview list [--json]
 mreview remove <SPEC>                               # SPEC: id | 1 | 1,3,5 | 2-4 | 1,3-5,8
 mreview clear [--archive]
-mreview export [--out PATH] [--format markdown|json] [--no-copy] [--no-open] [--no-write]
+mreview export [--out PATH] [--format markdown|json] [--editor CMD] [--no-copy] [--no-open] [--no-write]
 mreview config-zed [--dry-run]                      # merge tasks/keymap into ~/.config/zed
 ```
 
-Workspace defaults to `$MREVIEW_ZED_WORKTREE_ROOT`. Use `--workspace <PATH>` (or env `MREVIEW_WORKSPACE_ROOT`) to override; if neither is set, the CLI walks up from `$PWD` looking for `.git`.
+Workspace defaults to `$MREVIEW_WORKTREE_ROOT`. Use `--workspace <PATH>` (or env `MREVIEW_WORKSPACE_ROOT`) to override; if neither is set, the CLI walks up from `$PWD` looking for `.git`.
 
 ## Development
 

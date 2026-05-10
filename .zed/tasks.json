@@ -2,14 +2,14 @@
   {
     "label": "Manual Reviewer: Add for selection",
     "command": "mreview",
-    "args": ["add", "--from-zed-task"],
+    "args": ["add", "--from-env"],
     "env": {
-      "MREVIEW_ZED_TEXT": "${ZED_SELECTED_TEXT:}",
-      "MREVIEW_ZED_FILE": "${ZED_FILE:}",
-      "MREVIEW_ZED_ROW": "${ZED_ROW:}",
-      "MREVIEW_ZED_COLUMN": "${ZED_COLUMN:}",
-      "MREVIEW_ZED_LANGUAGE": "${ZED_LANGUAGE:}",
-      "MREVIEW_ZED_WORKTREE_ROOT": "${ZED_WORKTREE_ROOT}"
+      "MREVIEW_TEXT": "${ZED_SELECTED_TEXT:}",
+      "MREVIEW_FILE": "${ZED_FILE:}",
+      "MREVIEW_ROW": "${ZED_ROW:}",
+      "MREVIEW_COLUMN": "${ZED_COLUMN:}",
+      "MREVIEW_LANGUAGE": "${ZED_LANGUAGE:}",
+      "MREVIEW_WORKTREE_ROOT": "${ZED_WORKTREE_ROOT}"
     },
     "use_new_terminal": false,
     "reveal": "always",
@@ -21,7 +21,7 @@
     "command": "mreview",
     "args": ["export"],
     "env": {
-      "MREVIEW_ZED_WORKTREE_ROOT": "${ZED_WORKTREE_ROOT}"
+      "MREVIEW_WORKTREE_ROOT": "${ZED_WORKTREE_ROOT}"
     },
     "use_new_terminal": false,
     "reveal": "always",
@@ -32,7 +32,7 @@
     "command": "mreview",
     "args": ["list"],
     "env": {
-      "MREVIEW_ZED_WORKTREE_ROOT": "${ZED_WORKTREE_ROOT}"
+      "MREVIEW_WORKTREE_ROOT": "${ZED_WORKTREE_ROOT}"
     },
     "use_new_terminal": false,
     "reveal": "always"
@@ -42,7 +42,7 @@
     "command": "mreview",
     "args": ["clear", "--archive"],
     "env": {
-      "MREVIEW_ZED_WORKTREE_ROOT": "${ZED_WORKTREE_ROOT}"
+      "MREVIEW_WORKTREE_ROOT": "${ZED_WORKTREE_ROOT}"
     },
     "use_new_terminal": false,
     "reveal": "always"
