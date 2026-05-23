@@ -62,7 +62,7 @@ pub fn run(dry_run: bool) -> Result<()> {
 }
 
 fn config_dir() -> Result<PathBuf> {
-    if let Ok(home) = std::env::var("HOME") {
+    if let Some(home) = home::home_dir() {
         return Ok(PathBuf::from(home).join(".config").join("zed"));
     }
     Err(anyhow!("$HOME is not set; cannot locate ~/.config/zed"))
