@@ -117,8 +117,14 @@ mod tests {
                 file: Some("src/foo.rs".into()),
                 language: "rust".into(),
                 range: Some(PositionRange {
-                    start: Position { line: 10, column: 1 },
-                    end: Position { line: 20, column: 12 },
+                    start: Position {
+                        line: 10,
+                        column: 1,
+                    },
+                    end: Position {
+                        line: 20,
+                        column: 12,
+                    },
                 }),
                 snippet: "let x = 1;".into(),
                 comment: "rename".into(),
@@ -177,16 +183,31 @@ mod tests {
             git: None,
         };
         let json = serde_json::to_string(&e).unwrap();
-        assert!(!json.contains("\"file\""), "expected file omitted, got: {}", json);
-        assert!(!json.contains("\"range\""), "expected range omitted, got: {}", json);
-        assert!(!json.contains("\"git\""), "expected git omitted, got: {}", json);
+        assert!(
+            !json.contains("\"file\""),
+            "expected file omitted, got: {}",
+            json
+        );
+        assert!(
+            !json.contains("\"range\""),
+            "expected range omitted, got: {}",
+            json
+        );
+        assert!(
+            !json.contains("\"git\""),
+            "expected git omitted, got: {}",
+            json
+        );
     }
 
     #[test]
     fn position_range_format_matches_vscode() {
         let r = PositionRange {
             start: Position { line: 8, column: 0 },
-            end: Position { line: 12, column: 23 },
+            end: Position {
+                line: 12,
+                column: 23,
+            },
         };
         assert_eq!(r.format(), "8:0-12:23");
     }
@@ -207,7 +228,11 @@ mod tests {
             git: None,
         };
         let json = serde_json::to_string(&e).unwrap();
-        assert!(!json.contains("\"git\""), "expected git omitted, got: {}", json);
+        assert!(
+            !json.contains("\"git\""),
+            "expected git omitted, got: {}",
+            json
+        );
     }
 
     #[test]
@@ -215,6 +240,10 @@ mod tests {
         let s = now_iso();
         // Format: 2026-05-08T17:23:45.123Z
         assert!(s.ends_with('Z'), "expected trailing Z, got: {}", s);
-        assert!(s.contains('.'), "expected millisecond fractional, got: {}", s);
+        assert!(
+            s.contains('.'),
+            "expected millisecond fractional, got: {}",
+            s
+        );
     }
 }

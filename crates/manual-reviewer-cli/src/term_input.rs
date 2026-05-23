@@ -3,8 +3,8 @@ use std::io::{self, Write};
 
 use anyhow::{anyhow, Context, Result};
 use reedline::{
-    default_emacs_keybindings, EditCommand, Emacs, KeyCode, KeyModifiers, Prompt,
-    PromptEditMode, PromptHistorySearch, PromptViMode, Reedline, ReedlineEvent, Signal,
+    default_emacs_keybindings, EditCommand, Emacs, KeyCode, KeyModifiers, Prompt, PromptEditMode,
+    PromptHistorySearch, PromptViMode, Reedline, ReedlineEvent, Signal,
 };
 
 /// Read a multi-line comment from the terminal.
@@ -126,10 +126,7 @@ impl Prompt for MultilinePrompt {
     fn render_prompt_multiline_indicator(&self) -> Cow<'_, str> {
         Cow::Borrowed("  ")
     }
-    fn render_prompt_history_search_indicator(
-        &self,
-        _: PromptHistorySearch,
-    ) -> Cow<'_, str> {
+    fn render_prompt_history_search_indicator(&self, _: PromptHistorySearch) -> Cow<'_, str> {
         Cow::Borrowed("")
     }
 }

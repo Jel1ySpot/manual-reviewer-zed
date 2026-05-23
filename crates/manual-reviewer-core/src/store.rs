@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
 
-use crate::entry::{CommentEntry, Session, SCHEMA_VERSION, now_iso};
+use crate::entry::{now_iso, CommentEntry, Session, SCHEMA_VERSION};
 
 pub const SESSION_DIR: &str = ".mreview";
 pub const SESSION_FILE: &str = "session.json";
@@ -74,9 +74,8 @@ impl Store {
         }
         let stamp = now_iso().replace([':', '.'], "-");
         let archive_dir = self.workspace_root.join(SESSION_DIR).join(ARCHIVE_DIR);
-        fs::create_dir_all(&archive_dir).with_context(|| {
-            format!("create archive dir {}", archive_dir.display())
-        })?;
+        fs::create_dir_all(&archive_dir)
+            .with_context(|| format!("create archive dir {}", archive_dir.display()))?;
         let archive_path = archive_dir.join(format!("PROMPT-{}.md", stamp));
         fs::copy(prompt_path, &archive_path).with_context(|| {
             format!(
@@ -130,9 +129,8 @@ fn read_session(workspace_root: &Path) -> Result<Session> {
     if !session_path.exists() {
         return Ok(Session::empty(workspace_root.to_string_lossy()));
     }
-    let bytes = fs::read(&session_path).with_context(|| {
-        format!("read {}", session_path.display())
-    })?;
+    let bytes =
+        fs::read(&session_path).with_context(|| format!("read {}", session_path.display()))?;
     let parsed: Session = match serde_json::from_slice(&bytes) {
         Ok(s) => s,
         Err(_) => {

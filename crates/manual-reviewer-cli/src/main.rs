@@ -5,8 +5,8 @@ mod add_manual;
 mod add_zed;
 mod clear;
 mod cli;
-mod export;
 mod config_zed;
+mod export;
 mod list;
 mod remove;
 mod term_input;
@@ -31,9 +31,7 @@ fn main() -> Result<()> {
             } else if let Some(loc) = a.location {
                 add_manual::run(&workspace, &loc, a.message)
             } else {
-                Err(anyhow::anyhow!(
-                    "missing LOCATION (or use --from-env)"
-                ))
+                Err(anyhow::anyhow!("missing LOCATION (or use --from-env)"))
             }
         }
         Command::List(a) => list::run(&workspace, a.json),

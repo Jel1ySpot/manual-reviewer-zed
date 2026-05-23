@@ -34,13 +34,7 @@ pub fn run(workspace: &Path, json: bool) -> Result<()> {
             }
             EntryKind::Project => "(project-level)".to_string(),
         };
-        println!(
-            "[#{:>2}] {}  {}\n      id={}",
-            i + 1,
-            header,
-            preview,
-            e.id
-        );
+        println!("[#{:>2}] {}  {}\n      id={}", i + 1, header, preview, e.id);
     }
     println!("\n{} entries.", store.count());
     Ok(())

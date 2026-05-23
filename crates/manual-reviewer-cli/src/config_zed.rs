@@ -46,11 +46,19 @@ pub fn run(dry_run: bool) -> Result<()> {
         write_with_backup(&tasks_path, &content)?;
         println!("Wrote {} ({})", tasks_path.display(), tasks_change.summary);
     } else {
-        println!("Skipped {} ({})", tasks_path.display(), tasks_change.summary);
+        println!(
+            "Skipped {} ({})",
+            tasks_path.display(),
+            tasks_change.summary
+        );
     }
     if let Some(content) = keymap_change.to_write {
         write_with_backup(&keymap_path, &content)?;
-        println!("Wrote {} ({})", keymap_path.display(), keymap_change.summary);
+        println!(
+            "Wrote {} ({})",
+            keymap_path.display(),
+            keymap_change.summary
+        );
     } else {
         println!(
             "Skipped {} ({})",
@@ -75,8 +83,8 @@ struct ChangeReport {
 }
 
 fn merge_tasks(path: &PathBuf) -> Result<ChangeReport> {
-    let our_tasks: Vec<Value> = serde_json::from_str(TASKS_JSON)
-        .context("embedded tasks.json failed to parse")?;
+    let our_tasks: Vec<Value> =
+        serde_json::from_str(TASKS_JSON).context("embedded tasks.json failed to parse")?;
     let our_labels: Vec<String> = our_tasks
         .iter()
         .filter_map(|t| t.get("label").and_then(|l| l.as_str()).map(String::from))
@@ -89,10 +97,7 @@ fn merge_tasks(path: &PathBuf) -> Result<ChangeReport> {
             Err(e) => {
                 return Ok(ChangeReport {
                     to_write: None,
-                    summary: format!(
-                        "existing file failed to parse ({}); leaving untouched",
-                        e
-                    ),
+                    summary: format!("existing file failed to parse ({}); leaving untouched", e),
                     preview: text.clone(),
                 });
             }
@@ -103,10 +108,7 @@ fn merge_tasks(path: &PathBuf) -> Result<ChangeReport> {
     let mut added = 0usize;
     let mut replaced = 0usize;
     for new_task in &our_tasks {
-        let new_label = new_task
-            .get("label")
-            .and_then(|l| l.as_str())
-            .unwrap_or("");
+        let new_label = new_task.get("label").and_then(|l| l.as_str()).unwrap_or("");
         let pos = existing
             .iter()
             .position(|t| t.get("label").and_then(|l| l.as_str()) == Some(new_label));
@@ -159,10 +161,7 @@ fn merge_keymap(path: &PathBuf) -> Result<ChangeReport> {
             Err(e) => {
                 return Ok(ChangeReport {
                     to_write: None,
-                    summary: format!(
-                        "existing file failed to parse ({}); leaving untouched",
-                        e
-                    ),
+                    summary: format!("existing file failed to parse ({}); leaving untouched", e),
                     preview: text.clone(),
                 });
             }

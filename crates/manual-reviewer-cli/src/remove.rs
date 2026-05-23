@@ -83,11 +83,7 @@ fn resolve_targets(spec: &str, store: &Store) -> Result<Vec<String>> {
 
 fn one(idx: usize, total: usize, store: &Store) -> Result<String> {
     if idx == 0 || idx > total {
-        return Err(anyhow!(
-            "index {} is out of range (1..={})",
-            idx,
-            total
-        ));
+        return Err(anyhow!("index {} is out of range (1..={})", idx, total));
     }
     Ok(store.entries()[idx - 1].id.clone())
 }

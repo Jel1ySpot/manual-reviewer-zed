@@ -23,16 +23,13 @@ pub struct RenderArgs<'a> {
 
 pub fn render(args: RenderArgs<'_>) -> String {
     let timestamp = args.timestamp.unwrap_or_else(now_iso);
-    let repo = args
-        .repo_name
-        .map(|s| s.to_string())
-        .unwrap_or_else(|| {
-            Path::new(&args.session.workspace_root)
-                .file_name()
-                .and_then(|s| s.to_str())
-                .unwrap_or("")
-                .to_string()
-        });
+    let repo = args.repo_name.map(|s| s.to_string()).unwrap_or_else(|| {
+        Path::new(&args.session.workspace_root)
+            .file_name()
+            .and_then(|s| s.to_str())
+            .unwrap_or("")
+            .to_string()
+    });
     let git_info = format_git(args.git);
     let count = args.session.entries.len().to_string();
     let entries_block = if args.session.entries.is_empty() {
@@ -248,7 +245,10 @@ mod tests {
         // Output should NOT end with a `---` line — only the per-entry trailing
         // comment + a final newline.
         assert!(out.ends_with("rename x to count\n"), "got:\n{}", out);
-        assert!(!out.contains("rename x to count\n\n---\n\n\n"), "no trailing ---");
+        assert!(
+            !out.contains("rename x to count\n\n---\n\n\n"),
+            "no trailing ---"
+        );
     }
 
     #[test]
@@ -290,8 +290,14 @@ mod tests {
     fn first_line_indented_to_match_start_column() {
         let mut e = snippet_entry("e", "a.toml", "toml");
         e.range = Some(PositionRange {
-            start: Position { line: 17, column: 21 },
-            end: Position { line: 18, column: 5 },
+            start: Position {
+                line: 17,
+                column: 21,
+            },
+            end: Position {
+                line: 18,
+                column: 5,
+            },
         });
         e.snippet = "ttps://example\nchecksum = \"x\"".into();
         let s = session(vec![e]);
@@ -316,7 +322,10 @@ mod tests {
         e.snippet = lines.join("\n");
         e.range = Some(PositionRange {
             start: Position { line: 1, column: 1 },
-            end: Position { line: 60, column: 8 },
+            end: Position {
+                line: 60,
+                column: 8,
+            },
         });
         let s = session(vec![e]);
         let out = render(RenderArgs {
@@ -327,7 +336,11 @@ mod tests {
             git: None,
         });
         assert!(out.contains("line 30\n"), "head must be present: {}", out);
-        assert!(!out.contains("line 31\n"), "elided portion must be gone: {}", out);
+        assert!(
+            !out.contains("line 31\n"),
+            "elided portion must be gone: {}",
+            out
+        );
         assert!(
             out.contains("[... 30 more lines elided ...]"),
             "expected elision marker, got: {}",
@@ -349,7 +362,11 @@ mod tests {
             repo_name: None,
             git: None,
         });
-        assert!(out.contains("## [1] README.md\n\nmarkdown"), "got:\n{}", out);
+        assert!(
+            out.contains("## [1] README.md\n\nmarkdown"),
+            "got:\n{}",
+            out
+        );
         assert!(!out.contains("```"), "should have no code fence: {}", out);
     }
 
@@ -383,7 +400,10 @@ mod tests {
         e.snippet = "println!(\"hi\")".into();
         e.range = Some(PositionRange {
             start: Position { line: 5, column: 9 },
-            end: Position { line: 5, column: 23 },
+            end: Position {
+                line: 5,
+                column: 23,
+            },
         });
         let s = session(vec![e]);
         let out = render(RenderArgs {

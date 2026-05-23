@@ -8,8 +8,8 @@ use manual_reviewer_core::{git, Store};
 use crate::term_input::read_multiline_comment;
 
 pub fn run(workspace: &Path, location: &str, message: Option<String>) -> Result<()> {
-    let parsed = parse_location(location)
-        .with_context(|| format!("parse location {:?}", location))?;
+    let parsed =
+        parse_location(location).with_context(|| format!("parse location {:?}", location))?;
     let abs_file = if parsed.file.is_absolute() {
         parsed.file.clone()
     } else {
@@ -40,7 +40,11 @@ pub fn run(workspace: &Path, location: &str, message: Option<String>) -> Result<
     };
     let new_count = store.count() + 1;
     store.add(entry)?;
-    println!("Added entry #{}. Total: {} entries.", new_count, store.count());
+    println!(
+        "Added entry #{}. Total: {} entries.",
+        new_count,
+        store.count()
+    );
     Ok(())
 }
 
@@ -63,7 +67,7 @@ fn parse_location(input: &str) -> Result<ParsedLocation> {
         }
         let (head, tail) = input.split_at(i);
         let tail = &tail[1..]; // skip '-'
-        // tail must be `endLine:endCol`
+                               // tail must be `endLine:endCol`
         if !tail.contains(':') {
             continue;
         }
@@ -96,8 +100,14 @@ fn parse_location(input: &str) -> Result<ParsedLocation> {
             return Ok(ParsedLocation {
                 file: PathBuf::from(file_str),
                 range: PositionRange {
-                    start: Position { line: sl, column: sc },
-                    end: Position { line: el, column: ec },
+                    start: Position {
+                        line: sl,
+                        column: sc,
+                    },
+                    end: Position {
+                        line: el,
+                        column: ec,
+                    },
                 },
             });
         }
@@ -122,14 +132,20 @@ fn read_snippet(file: &Path, range: &PositionRange) -> Result<String> {
     if range.start.line == range.end.line {
         let line = lines[range.start.line as usize - 1];
         let chars: Vec<char> = line.chars().collect();
-        let s = (range.start.column as usize).saturating_sub(1).min(chars.len());
-        let e = (range.end.column as usize).saturating_sub(1).min(chars.len());
+        let s = (range.start.column as usize)
+            .saturating_sub(1)
+            .min(chars.len());
+        let e = (range.end.column as usize)
+            .saturating_sub(1)
+            .min(chars.len());
         return Ok(chars[s..e].iter().collect());
     }
     let mut buf = String::new();
     let first = lines[range.start.line as usize - 1];
     let first_chars: Vec<char> = first.chars().collect();
-    let s = (range.start.column as usize).saturating_sub(1).min(first_chars.len());
+    let s = (range.start.column as usize)
+        .saturating_sub(1)
+        .min(first_chars.len());
     buf.push_str(&first_chars[s..].iter().collect::<String>());
     buf.push('\n');
     for line in &lines[range.start.line as usize..range.end.line as usize - 1] {
@@ -138,7 +154,9 @@ fn read_snippet(file: &Path, range: &PositionRange) -> Result<String> {
     }
     let last = lines[range.end.line as usize - 1];
     let last_chars: Vec<char> = last.chars().collect();
-    let e = (range.end.column as usize).saturating_sub(1).min(last_chars.len());
+    let e = (range.end.column as usize)
+        .saturating_sub(1)
+        .min(last_chars.len());
     buf.push_str(&last_chars[..e].iter().collect::<String>());
     Ok(buf)
 }

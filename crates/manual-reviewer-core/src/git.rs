@@ -8,15 +8,15 @@ pub fn capture(workspace_root: &Path) -> Option<GitInfo> {
     let branch =
         run_git(workspace_root, &["rev-parse", "--abbrev-ref", "HEAD"]).unwrap_or_default();
     let dirty = is_dirty(workspace_root);
-    Some(GitInfo {
-        sha,
-        branch,
-        dirty,
-    })
+    Some(GitInfo { sha, branch, dirty })
 }
 
 fn run_git(cwd: &Path, args: &[&str]) -> Option<String> {
-    let out = Command::new("git").args(args).current_dir(cwd).output().ok()?;
+    let out = Command::new("git")
+        .args(args)
+        .current_dir(cwd)
+        .output()
+        .ok()?;
     if !out.status.success() {
         return None;
     }

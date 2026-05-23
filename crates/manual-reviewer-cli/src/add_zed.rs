@@ -28,10 +28,7 @@ enum Mode {
         language: String,
     },
     /// User selected the whole file (or used cmd-A then triggered).
-    File {
-        file_abs: PathBuf,
-        language: String,
-    },
+    File { file_abs: PathBuf, language: String },
     /// No selection; treated as a project-level note.
     Project,
 }
@@ -48,8 +45,8 @@ pub fn run(workspace: &Path, message: Option<String>) -> Result<()> {
         return Err(anyhow!("Empty comment — entry not added."));
     }
 
-    let mut store = Store::open(workspace)
-        .with_context(|| format!("open store at {}", workspace.display()))?;
+    let mut store =
+        Store::open(workspace).with_context(|| format!("open store at {}", workspace.display()))?;
     let entry = build_entry(&mode, comment, workspace);
     let new_count = store.count() + 1;
     store.add(entry)?;
@@ -85,10 +82,7 @@ fn detect_mode() -> Result<Mode> {
     let (end_line, end_col) = derive_end_position(start_line, start_col, &text);
 
     if covers_whole_file(&file_abs, &text, start_line, start_col, end_line, end_col) {
-        return Ok(Mode::File {
-            file_abs,
-            language,
-        });
+        return Ok(Mode::File { file_abs, language });
     }
 
     Ok(Mode::Snippet {
